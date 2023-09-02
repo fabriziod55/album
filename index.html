@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álbum de Fotos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: rgb(0, 0, 0);
+            
+        }
+
+        h1 {
+            color: #e6005c;
+            text-shadow: 2px 2px 3px rgb(red)
+        }
+
+        
+
+       
+            
+
+        #contenedorFotos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 25px;
+            
+        }
+
+        .foto {
+            background-color: #fffefe;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(251, 240, 240, 0.2);
+            padding: 10px;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        #foto {
+            max-width: 100%;
+        }
+        button {
+            background-color: #e6005c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff3366;
+           
+        }
+        #contadorFotos {
+            font-size: 18px; /* Tamaño de fuente */
+            color: #e6005c; /* Color de texto */
+            font-weight: bolder; /* Texto en negrita */
+            margin-top: 25px; /* Margen superior */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background-position: 5px;
+            background-color: #fff;
+        }
+       
+
+    </style>
+</head>
+<body>
+    <h1>Álbum de Fotos</h1>
+
+    <label for="inputFoto" class="custom-label">
+       
+    </label>
+    <input type="file" id="inputFoto" accept="image/*" class="custom-input">
+    <button onclick="cargarFoto()">Cargar Foto</button>
+    <p id="contadorFotos">0 Fotos</p>
+    
+    <div id="contenedorFotos"></div>
+
+
+    
+
+  
+    <script>
+         let contador = 0; // Inicializamos el contador en 0
+
+        function cargarFoto() {
+            const inputFoto = document.getElementById("inputFoto");
+            const contenedorFotos = document.getElementById("contenedorFotos");
+
+            const foto = document.createElement("div");
+            foto.setAttribute("class", "foto");
+
+            const imagen = document.createElement("img");
+            imagen.setAttribute("id", "foto");
+            const archivoFoto = inputFoto.files[0];
+
+            if (archivoFoto) {
+                const lector = new FileReader();
+
+                lector.onload = function(evento) {
+                    imagen.src = evento.target.result;
+                    foto.appendChild(imagen);
+                     // Capturar la fecha actual
+                     const fechaActual = new Date();
+                    const fechaFormateada = `${fechaActual.getDate()}/${fechaActual.getMonth() + 1}/${fechaActual.getFullYear()}`;
+
+                    // Agregar la fecha al elemento de la foto
+                    const fechaElemento = document.createElement("p");
+                    fechaElemento.textContent = `Agregado el ${fechaFormateada}`;
+                    foto.appendChild(fechaElemento);
+
+                    // Agregar botón para eliminar la foto
+                    const botonEliminar = document.createElement("button");
+                    botonEliminar.innerText = "Eliminar Foto";
+                    botonEliminar.onclick = function() {
+                        contenedorFotos.removeChild(foto);
+                        contador--;
+                        actualizarContador();
+                    };
+                    foto.appendChild(botonEliminar);
+
+                    contenedorFotos.appendChild(foto);
+                     // Sumar 1 al contador cuando se carga una foto
+                     contador++;
+                    actualizarContador();
+                };
+
+                lector.readAsDataURL(archivoFoto);
+            }
+        }
+        // Función para actualizar el contador de fotos
+        function actualizarContador() {
+            const contadorFotos = document.getElementById("contadorFotos");
+            contadorFotos.textContent = contador + " " + (contador === 1 ? "Foto" : "Fotos");
+        }
+    </script>
+</body>
+</html>
